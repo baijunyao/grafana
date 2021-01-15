@@ -149,7 +149,7 @@ func (hs *HTTPServer) GetDashboard(c *models.ReqContext) utils.Response {
 
 	if hs.Cfg.IsPanelLibraryEnabled() {
 		// load library panels
-		err = loadLibraryPanels(dash)
+		err = hs.loadLibraryPanels(dash)
 		if err != nil {
 			return utils.Error(500, "Error while loading library panels", err)
 		}

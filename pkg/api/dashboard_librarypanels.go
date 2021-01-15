@@ -4,15 +4,14 @@ import (
 	"errors"
 
 	"github.com/grafana/grafana/pkg/components/simplejson"
-
-	"github.com/grafana/grafana/pkg/bus"
 	"github.com/grafana/grafana/pkg/models"
+	"github.com/grafana/grafana/pkg/services/librarypanels"
 )
 
-func loadLibraryPanels(dash *models.Dashboard) error {
-	query := models.GetLibraryPanelsQuery{DashboardId: dash.Id}
-
-	if err := bus.Dispatch(&query); err != nil {
+func (hs *HTTPServer) loadLibraryPanels(dash *models.Dashboard) error {
+	query := librarypanels.GetLibraryPanelsQuery{DashboardId: dash.Id}
+	libraryPanels, err := hs.LibraryPanelService.GetLibraryPanelsForDashboard(query)
+	if err != nil {
 		return err
 	}
 
@@ -30,7 +29,7 @@ func loadLibraryPanels(dash *models.Dashboard) error {
 			return errors.New("found a library panel without uid")
 		}
 
-		libraryPanelInDb, ok := query.Result[uid]
+		libraryPanelInDb, ok := libraryPanels[uid]
 		if !ok {
 			return errors.New("found a library panel that does not exists as a connection")
 		}

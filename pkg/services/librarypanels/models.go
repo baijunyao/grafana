@@ -57,3 +57,7 @@ type patchLibraryPanelCommand struct {
 	Name     string          `json:"name"`
 	Model    json.RawMessage `json:"model"`
 }
+
+type GetLibraryPanelsQuery struct {
+	DashboardId int64
+}

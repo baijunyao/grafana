@@ -229,3 +229,30 @@ func (lps *LibraryPanelService) patchLibraryPanel(c *models.ReqContext, cmd patc
 
 	return libraryPanel, err
 }
+
+func (lps *LibraryPanelService) GetLibraryPanelsForDashboard(query GetLibraryPanelsQuery) (map[string]LibraryPanel, error) {
+	libraryPanelMap := make(map[string]LibraryPanel)
+	err := lps.SQLStore.WithDbSession(context.Background(), func(session *sqlstore.DBSession) error {
+		sql := `SELECT
+				lp.id, lp.org_id, lp.folder_id, lp.uid, lp.name, lp.model, lp.created, lp.created_by, lp.updated, updated_by
+			FROM
+				library_panel_dashboard lpd
+			INNER JOIN
+				library_panel lp ON lpd.librarypanel_id = lp.id AND lpd.dashboard_id=?`
+
+		libraryPanels := make([]LibraryPanel, 0)
+		sess := session.SQL(sql, query.DashboardId)
+		err := sess.Find(&libraryPanels)
+		if err != nil {
+			return err
+		}
+
+		for _, panel := range libraryPanels {
+			libraryPanelMap[panel.UID] = panel
+		}
+
+		return nil
+	})
+
+	return libraryPanelMap, err
+}
