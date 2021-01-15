@@ -1,4 +1,4 @@
-package api
+package utils
 
 import (
 	"encoding/json"
@@ -45,6 +45,14 @@ func Wrap(action interface{}) macaron.Handler {
 	}
 }
 
+func CreateResponse(headers http.Header, body []byte, status int) *NormalResponse {
+	return &NormalResponse{
+		header: headers,
+		body:   body,
+		status: status,
+	}
+}
+
 // Status gets the response's status.
 func (r *NormalResponse) Status() int {
 	return r.status
@@ -53,6 +61,16 @@ func (r *NormalResponse) Status() int {
 // Body gets the response's body.
 func (r *NormalResponse) Body() []byte {
 	return r.body
+}
+
+// Err gets the response's body.
+func (r *NormalResponse) Err() error {
+	return r.err
+}
+
+// ErrMessage gets the response's body.
+func (r *NormalResponse) ErrMessage() string {
+	return r.errMessage
 }
 
 func (r *NormalResponse) WriteTo(ctx *models.ReqContext) {
