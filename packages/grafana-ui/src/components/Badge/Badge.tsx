@@ -49,17 +49,17 @@ const getStyles = stylesFactory((theme: GrafanaTheme, color: BadgeColor) => {
 
   if (theme.isDark) {
     bgColor = tinycolor(sourceColor)
-      .darken(38)
+      .setAlpha(0.1)
       .toString();
     borderColor = tinycolor(sourceColor)
-      .darken(25)
+      .darken(35)
       .toString();
     textColor = tinycolor(sourceColor)
-      .lighten(45)
+      .lighten(15)
       .toString();
   } else {
     bgColor = tinycolor(sourceColor)
-      .lighten(30)
+      .setAlpha(0.1)
       .toString();
     borderColor = tinycolor(sourceColor)
       .lighten(15)
